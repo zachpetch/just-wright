@@ -9,7 +9,7 @@ fn main() -> iced::Result {
     iced::application(Editor::boot, Editor::update, Editor::view)
         .title("just-write")
         .window(window::Settings {
-            fullscreen: true,
+            fullscreen: false,
             decorations: false,
             ..Default::default()
         })
@@ -49,7 +49,7 @@ impl Editor {
             is_dirty: false,
             history: vec![String::new()],
             history_index: 0,
-            is_fullscreen: true,
+            is_fullscreen: false,
         }
     }
 
@@ -163,23 +163,20 @@ impl Editor {
     }
 
     fn view(&self) -> Element<'_, Message> {
-        let bg = Color::from_rgb8(0xee, 0xee, 0xee);
-        let fg = Color::from_rgb8(0x33, 0x33, 0x33);
-
         let editor = iced::widget::text_editor(&self.content)
             .font(Font::MONOSPACE)
             .size(18.0)
             .height(Length::Fill)
             .padding(Padding::from([20, 0]))
-            .style(move |_theme, _status| text_editor::Style {
-                background: Background::Color(bg),
+            .style(|_theme, _status| text_editor::Style {
+                background: Background::Color(Color::WHITE),
                 border: Border {
                     width: 0.0,
                     ..Default::default()
                 },
-                placeholder: Color::from_rgb8(0x99, 0x99, 0x99),
-                value: fg,
-                selection: Color::from_rgba8(0x33, 0x33, 0x33, 0.2),
+                placeholder: Color::from_rgb(0.5, 0.5, 0.5),
+                value: Color::BLACK,
+                selection: Color::from_rgba(0.0, 0.0, 0.0, 0.2),
             })
             .on_action(Message::EditorAction)
             .key_binding(|key_press: KeyPress| {
@@ -219,8 +216,8 @@ impl Editor {
         container(layout)
             .width(Length::Fill)
             .height(Length::Fill)
-            .style(move |_| container::Style {
-                background: Some(Background::Color(bg)),
+            .style(|_| container::Style {
+                background: Some(Background::Color(Color::WHITE)),
                 ..Default::default()
             })
             .into()

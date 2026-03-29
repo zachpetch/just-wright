@@ -1,12 +1,12 @@
 # just-write
 
-A distraction-free plain text editor. Full screen, minimal UI, nothing else.
+A distraction-free plain text editor. Minimal UI, nothing else.
 
 ## Features
 
-- Always full screen with no window decorations
-- Monospaced font, 18pt, light background (#eeeeee) with dark text (#333333)
+- Monospaced font, 18pt, black text on white background
 - Text area is 80% of screen width (10% margin on each side)
+- Toggle fullscreen with Shift+Cmd+F
 
 ## Keyboard shortcuts
 
