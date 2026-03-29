@@ -16,6 +16,7 @@ A distraction-free plain text editor. Full screen, minimal UI, nothing else.
 | Cmd+O | Open file |
 | Cmd+S | Save (overwrites if previously saved, otherwise prompts) |
 | Shift+Cmd+S | Save as |
+| Shift+Cmd+F | Toggle fullscreen |
 | Cmd+Z | Undo |
 | Shift+Cmd+Z | Redo |
 | Cmd+Q | Quit |

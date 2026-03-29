@@ -22,6 +22,7 @@ struct Editor {
     is_dirty: bool,
     history: Vec<String>,
     history_index: usize,
+    is_fullscreen: bool,
 }
 
 #[derive(Debug, Clone)]
@@ -34,6 +35,7 @@ enum Message {
     SaveFile,
     SaveFileAs,
     FileSaved(Option<PathBuf>),
+    ToggleFullscreen,
     Undo,
     Redo,
     Quit,
@@ -47,6 +49,7 @@ impl Editor {
             is_dirty: false,
             history: vec![String::new()],
             history_index: 0,
+            is_fullscreen: true,
         }
     }
 
@@ -128,6 +131,15 @@ impl Editor {
                 Task::none()
             }
             Message::FileSaved(None) => Task::none(),
+            Message::ToggleFullscreen => {
+                self.is_fullscreen = !self.is_fullscreen;
+                let mode = if self.is_fullscreen {
+                    window::Mode::Fullscreen
+                } else {
+                    window::Mode::Windowed
+                };
+                window::oldest().and_then(move |id| window::set_mode(id, mode))
+            }
             Message::Undo => {
                 if self.history_index > 0 {
                     self.history_index -= 1;
@@ -181,6 +193,9 @@ impl Editor {
                         }
                         Key::Character("s") => Some(Binding::Custom(Message::SaveFile)),
                         Key::Character("n") => Some(Binding::Custom(Message::NewFile)),
+                        Key::Character("f") if modifiers.shift() => {
+                            Some(Binding::Custom(Message::ToggleFullscreen))
+                        }
                         Key::Character("z") if modifiers.shift() => {
                             Some(Binding::Custom(Message::Redo))
                         }
