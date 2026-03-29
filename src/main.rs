@@ -2,15 +2,11 @@ use iced::keyboard::Key;
 use iced::widget::text_editor::{self, Action, Binding, Content, KeyPress};
 use iced::widget::{container, row, Space};
 use iced::window;
-use iced::{Background, Border, Color, Element, Font, Length, Padding, Size, Subscription, Task};
+use iced::{Background, Border, Color, Element, Font, Length, Padding, Task};
 use std::path::PathBuf;
-
-const FONT_SIZE: f32 = 18.0;
-const LINE_HEIGHT: f32 = 1.3;
 
 fn main() -> iced::Result {
     iced::application(Editor::boot, Editor::update, Editor::view)
-        .subscription(Editor::subscription)
         .title("just-write")
         .window(window::Settings {
             fullscreen: true,
@@ -26,13 +22,12 @@ struct Editor {
     is_dirty: bool,
     history: Vec<String>,
     history_index: usize,
-    window_height: f32,
 }
 
 #[derive(Debug, Clone)]
 enum Message {
     EditorAction(Action),
-    WindowResized(Size),
+
     NewFile,
     OpenFile,
     FileOpened(Option<(PathBuf, String)>),
@@ -52,22 +47,6 @@ impl Editor {
             is_dirty: false,
             history: vec![String::new()],
             history_index: 0,
-            window_height: 900.0,
-        }
-    }
-
-    fn visible_lines(&self) -> i32 {
-        (self.window_height / (FONT_SIZE * LINE_HEIGHT)) as i32
-    }
-
-    fn center_cursor(&mut self) {
-        let cursor_line = self.content.cursor().position.line as i32;
-        let half = self.visible_lines() / 2;
-        // Reset to top, then scroll to center cursor
-        self.content.perform(Action::Scroll { lines: i32::MIN / 2 });
-        let target = (cursor_line - half).max(0);
-        if target > 0 {
-            self.content.perform(Action::Scroll { lines: target });
         }
     }
 
@@ -89,12 +68,6 @@ impl Editor {
                     self.is_dirty = true;
                     self.push_history();
                 }
-                self.center_cursor();
-                Task::none()
-            }
-            Message::WindowResized(size) => {
-                self.window_height = size.height;
-                self.center_cursor();
                 Task::none()
             }
             Message::NewFile => {
@@ -236,15 +209,5 @@ impl Editor {
                 ..Default::default()
             })
             .into()
-    }
-
-    fn subscription(&self) -> Subscription<Message> {
-        iced::event::listen_with(|event, _status, _id| {
-            if let iced::Event::Window(window::Event::Resized(size)) = event {
-                Some(Message::WindowResized(size))
-            } else {
-                None
-            }
-        })
     }
 }

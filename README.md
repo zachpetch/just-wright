@@ -7,7 +7,6 @@ A distraction-free plain text editor. Full screen, minimal UI, nothing else.
 - Always full screen with no window decorations
 - Monospaced font, 18pt, light background (#eeeeee) with dark text (#333333)
 - Text area is 80% of screen width (10% margin on each side)
-- Current line stays vertically centered on screen
 
 ## Keyboard shortcuts
 
